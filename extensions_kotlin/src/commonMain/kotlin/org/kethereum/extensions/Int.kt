@@ -9,4 +9,3 @@ fun Int.toMinimalByteArray() = toByteArray().let {
 }
 
 private fun ByteArray.minimalStart() = indexOfFirst { it != 0.toByte() }.let { if (it == -1) 4 else it }
-fun ByteArray.removeLeadingZero() = if (first() == 0.toByte()) copyOfRange(1, size) else this

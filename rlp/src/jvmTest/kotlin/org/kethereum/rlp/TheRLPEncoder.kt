@@ -38,7 +38,6 @@ class TheRLPEncoder {
 
         assertThat(RLPElement("a".toByteArray())).isEqualTo(RLPElement("a".toByteArray()))
         assertThat(RLPElement("YoLo".toByteArray())).isEqualTo(RLPElement("YoLo".toByteArray()))
-
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.kethereum.rlp
 
-import java.math.BigInteger
+import com.ionspin.kotlin.bignum.integer.BigInteger
+import com.ionspin.kotlin.bignum.integer.Sign
 
 /**
 RLP as of Appendix B. Recursive Length Prefix at https://github.com/ethereum/yellowpaper
@@ -23,7 +24,8 @@ private fun ByteArray.decodeRLPWithSize(offset: Int = 0): DecodeResult {
         value < ELEMENT_OFFSET -> DecodeResult(value.toByte().toRLP(), 1)
         value < LIST_OFFSET -> (value - ELEMENT_OFFSET).let {
             val lengthAndOffset = getLengthAndOffset(it, offset)
-            DecodeResult(copyOfRange(lengthAndOffset.offset, lengthAndOffset.offset + lengthAndOffset.length).toRLP(), lengthAndOffset.length + lengthAndOffset.offset - offset)
+            DecodeResult(copyOfRange(lengthAndOffset.offset, lengthAndOffset.offset + lengthAndOffset.length).toRLP(),
+                lengthAndOffset.length + lengthAndOffset.offset - offset)
         }
         else -> (value - LIST_OFFSET).let {
             val list = mutableListOf<RLPType>()
@@ -44,6 +46,6 @@ private fun ByteArray.getLengthAndOffset(firstByte: Int, offset: Int) = if (firs
     LengthAndOffset(firstByte, offset + 1)
 } else {
     val size = firstByte - 54
-    val length = BigInteger(1, copyOfRange(offset + 1, offset + size)).toInt()
+    val length = BigInteger.fromByteArray(copyOfRange(offset + 1, offset + size), Sign.POSITIVE).intValue(true)
     LengthAndOffset(length, offset + size)
 }

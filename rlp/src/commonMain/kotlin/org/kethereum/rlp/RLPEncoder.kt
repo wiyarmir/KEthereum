@@ -9,8 +9,8 @@ RLP as of Appendix B. Recursive Length Prefix at https://github.com/ethereum/yel
 fun RLPType.encode(): ByteArray = when (this) {
     is RLPElement -> bytes.encodeLegacyTxRLP(ELEMENT_OFFSET)
     is RLPList -> element.asSequence().map { it.encode() }
-            .fold(ByteArray(0)) { acc, bytes -> acc + bytes } // this can be speed optimized when needed
-            .encodeLegacyTxRLP(LIST_OFFSET)
+        .fold(ByteArray(0)) { acc, bytes -> acc + bytes } // this can be speed optimized when needed
+        .encodeLegacyTxRLP(LIST_OFFSET)
 }
 
 internal fun ByteArray.encodeLegacyTxRLP(offset: Int) = when {
