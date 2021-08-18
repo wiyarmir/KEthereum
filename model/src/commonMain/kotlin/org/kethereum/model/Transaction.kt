@@ -1,8 +1,8 @@
 package org.kethereum.model
 
+import com.ionspin.kotlin.bignum.integer.BigInteger
 import org.kethereum.DEFAULT_GAS_LIMIT
 import org.kethereum.DEFAULT_GAS_PRICE
-import java.math.BigInteger
 
 data class Transaction(
     var chain: BigInteger?,
@@ -39,7 +39,7 @@ data class Transaction(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other == null || this::class != other::class) return false
 
         other as Transaction
 

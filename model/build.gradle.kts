@@ -1,4 +1,20 @@
-dependencies {
-    "implementation"("com.github.komputing:khex:${Versions.khex}")
-    "implementation"(project(":extensions_kotlin"))
+plugins {
+    kotlin("multiplatform")
+}
+
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":extensions_kotlin"))
+                implementation("com.ionspin.kotlin:bignum:0.3.1")
+                implementation("com.github.komputing:khex:${Versions.khex}")
+            }
+        }
+    }
 }

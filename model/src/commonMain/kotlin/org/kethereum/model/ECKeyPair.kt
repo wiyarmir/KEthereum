@@ -1,9 +1,10 @@
 package org.kethereum.model
 
+import com.ionspin.kotlin.bignum.integer.BigInteger
 import org.kethereum.extensions.hexToBigInteger
 import org.kethereum.extensions.toBigInteger
 import org.komputing.khex.model.HexString
-import java.math.BigInteger
+import kotlin.jvm.JvmInline
 
 @JvmInline
 value class PrivateKey(val key: BigInteger) {
