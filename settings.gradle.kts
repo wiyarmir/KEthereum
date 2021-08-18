@@ -14,7 +14,7 @@
 //include(":blockscout")
 //include(":bloomfilter")
 //include(":crypto")
-//include(":crypto_api")
+include(":crypto_api")
 //include(":crypto_impl_java_provider")
 //include(":crypto_impl_bouncycastle")
 //include(":crypto_impl_spongycastle")

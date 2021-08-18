@@ -15,18 +15,15 @@ fun <T> loadClass(name: String): T = try {
     throw RuntimeException("There is not implementation found for $name - you need to either depend on crypto_impl_spongycastle or crypto_impl_bouncycastle")
 }
 
-object CryptoAPI {
-    val hmac by lazy { loadClass("mac.HmacImpl") as Hmac }
+actual object CryptoAPI {
+    actual val hmac by lazy { loadClass("mac.HmacImpl") as Hmac }
 
-    val keyPairGenerator by lazy { loadClass("ec.EllipticCurveKeyPairGenerator") as KeyPairGenerator }
-    val curve by lazy { loadClass("ec.EllipticCurve") as Curve }
-    val signer by lazy { loadClass("ec.EllipticCurveSigner") as Signer }
+    actual val keyPairGenerator by lazy { loadClass("ec.EllipticCurveKeyPairGenerator") as KeyPairGenerator }
+    actual val curve by lazy { loadClass("ec.EllipticCurve") as Curve }
+    actual val signer by lazy { loadClass("ec.EllipticCurveSigner") as Signer }
 
+    actual val pbkdf2 by lazy { loadClass("kdf.PBKDF2Impl") as PBKDF2 }
+    actual val scrypt by lazy { loadClass("kdf.SCryptImpl") as SCrypt }
 
-    val pbkdf2 by lazy { loadClass("kdf.PBKDF2Impl") as PBKDF2 }
-    val scrypt by lazy { loadClass("kdf.SCryptImpl") as SCrypt }
-
-    val aesCipher by lazy { loadClass("cipher.AESCipherImpl") as AESCipher }
-
-
+    actual val aesCipher by lazy { loadClass("cipher.AESCipherImpl") as AESCipher }
 }

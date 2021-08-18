@@ -9,7 +9,6 @@ interface AESCipher {
     enum class Mode(val id: String) {
         CTR("CTR"),
         CDC("CDC")
-
     }
 
     enum class Padding(val id: String) {
