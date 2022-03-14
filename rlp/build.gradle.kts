@@ -15,7 +15,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":extensions_kotlin"))
-                implementation("com.ionspin.kotlin:bignum:0.3.1")
+                implementation("com.ionspin.kotlin:bignum:0.3.2")
             }
         }
         val jvmTest by getting {

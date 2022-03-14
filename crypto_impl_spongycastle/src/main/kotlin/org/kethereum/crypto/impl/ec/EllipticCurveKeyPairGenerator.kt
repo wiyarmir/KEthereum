@@ -1,6 +1,7 @@
 package org.kethereum.crypto.impl.ec
 
 import org.kethereum.crypto.api.ec.KeyPairGenerator
+import org.kethereum.extensions.asMppBigInteger
 import org.kethereum.model.ECKeyPair
 import org.kethereum.model.PrivateKey
 import org.kethereum.model.PublicKey
@@ -18,7 +19,7 @@ class EllipticCurveKeyPairGenerator : KeyPairGenerator {
             val privateKeyValue = (private as ECPrivateKeyParameters).d
             val publicKeyBytes = (public as ECPublicKeyParameters).q.getEncoded(false)
             val publicKeyValue = BigInteger(1, Arrays.copyOfRange(publicKeyBytes, 1, publicKeyBytes.size))
-            ECKeyPair(PrivateKey(privateKeyValue), PublicKey(publicKeyValue))
+            ECKeyPair(PrivateKey(privateKeyValue.asMppBigInteger()), PublicKey(publicKeyValue.asMppBigInteger()))
         }
     }
 }

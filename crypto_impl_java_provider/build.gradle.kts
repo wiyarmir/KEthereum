@@ -1,3 +1,7 @@
+plugins {
+    kotlin("jvm")
+}
+
 dependencies {
-    "implementation"(project(":crypto_api"))
+    implementation(project(":crypto_api"))
 }

@@ -1,17 +1,19 @@
 package org.kethereum.crypto.impl.ec
 
+import com.ionspin.kotlin.bignum.integer.BigInteger
 import org.bouncycastle.math.ec.ECPoint
 import org.kethereum.crypto.api.ec.CurvePoint
-import java.math.BigInteger
+import org.kethereum.extensions.asJvmBigInteger
+import org.kethereum.extensions.asMppBigInteger
 
 class EllipticCurvePoint(private val ecPoint: ECPoint) : CurvePoint {
     override val x: BigInteger
-        get() = ecPoint.xCoord.toBigInteger()
+        get() = ecPoint.xCoord.toBigInteger().asMppBigInteger()
     override val y: BigInteger
-        get() = ecPoint.yCoord.toBigInteger()
+        get() = ecPoint.yCoord.toBigInteger().asMppBigInteger()
 
     override fun mul(n: BigInteger): CurvePoint =
-        ecPoint.multiply(n).toCurvePoint()
+        ecPoint.multiply(n.asJvmBigInteger()).toCurvePoint()
 
     override fun add(p: CurvePoint): CurvePoint =
         (p as? EllipticCurvePoint)?.let {

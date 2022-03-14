@@ -11,19 +11,23 @@ import org.bouncycastle.math.ec.FixedPointCombMultiplier
 import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve
 import org.kethereum.crypto.api.ec.ECDSASignature
 import org.kethereum.crypto.api.ec.Signer
+import org.kethereum.extensions.asJvmBigInteger
+import org.kethereum.extensions.asMppBigInteger
 import java.math.BigInteger
+import com.ionspin.kotlin.bignum.integer.BigInteger as MppBigInteger
+
 import java.util.*
 
 class EllipticCurveSigner : Signer {
 
-    override fun sign(transactionHash: ByteArray, privateKey: BigInteger, canonical: Boolean): ECDSASignature {
+    override fun sign(transactionHash: ByteArray, privateKey: MppBigInteger, canonical: Boolean): ECDSASignature {
         val signer = ECDSASigner(HMacDSAKCalculator(SHA256Digest()))
 
-        val ecPrivateKeyParameters = ECPrivateKeyParameters(privateKey, DOMAIN_PARAMS)
+        val ecPrivateKeyParameters = ECPrivateKeyParameters(privateKey.asJvmBigInteger(), DOMAIN_PARAMS)
         signer.init(true, ecPrivateKeyParameters)
         val components = signer.generateSignature(transactionHash)
 
-        return ECDSASignature(components[0], components[1]).let {
+        return ECDSASignature(components[0].asMppBigInteger(), components[1].asMppBigInteger()).let {
             if (canonical) {
                 it.canonicalise()
             } else {
@@ -59,7 +63,7 @@ class EllipticCurveSigner : Signer {
      * @param message org.kethereum.crypto.Hash of the data that was signed.
      * @return An ECKey containing only the public part, or null if recovery wasn't possible.
      */
-    override fun recover(recId: Int, sig: ECDSASignature, message: ByteArray?): BigInteger? {
+    override fun recover(recId: Int, sig: ECDSASignature, message: ByteArray?): MppBigInteger? {
         require(recId >= 0) { "recId must be positive" }
         require(sig.r.signum() >= 0) { "r must be positive" }
         require(sig.s.signum() >= 0) { "s must be positive" }
@@ -69,7 +73,7 @@ class EllipticCurveSigner : Signer {
         //   1.1 Let x = r + jn
         val n = CURVE_PARAMS.n  // Curve order.
         val i = BigInteger.valueOf(recId.toLong() / 2)
-        val x = sig.r.add(i.multiply(n))
+        val x = sig.r.asJvmBigInteger().add(i.multiply(n))
         //   1.2. Convert the integer x to an octet string X of length mlen using the conversion
         //        routine specified in Section 2.3.7, where mlen = ⌈(log2 p)/8⌉ or mlen = ⌈m/8⌉.
         //   1.3. Convert the octet string (16 set binary digits)||X to an elliptic curve point R
@@ -107,14 +111,14 @@ class EllipticCurveSigner : Signer {
         // example the additive inverse of 3 modulo 11 is 8 because 3 + 8 mod 11 = 0, and
         // -3 mod 11 = 8.
         val eInv = BigInteger.ZERO.subtract(e).mod(n)
-        val rInv = sig.r.modInverse(n)
-        val srInv = rInv.multiply(sig.s).mod(n)
+        val rInv = sig.r.asJvmBigInteger().modInverse(n)
+        val srInv = rInv.multiply(sig.s.asJvmBigInteger()).mod(n)
         val eInvrInv = rInv.multiply(eInv).mod(n)
         val q = ECAlgorithms.sumOfTwoMultiplies(CURVE_PARAMS.g, eInvrInv, r, srInv)
 
         val qBytes = q.getEncoded(false)
         // We remove the prefix
-        return BigInteger(1, Arrays.copyOfRange(qBytes, 1, qBytes.size))
+        return BigInteger(1, Arrays.copyOfRange(qBytes, 1, qBytes.size)).asMppBigInteger()
     }
 
     /** Decompress a compressed public key (x co-ord and low-bit of y-coord).  */
@@ -125,12 +129,12 @@ class EllipticCurveSigner : Signer {
         return DOMAIN_PARAMS.curve.decodePoint(compEnc)
     }
 
-    override fun publicFromPrivate(privateKey: BigInteger): BigInteger {
+    override fun publicFromPrivate(privateKey: MppBigInteger): MppBigInteger {
 
-        val point = publicPointFromPrivate(privateKey)
+        val point = publicPointFromPrivate(privateKey.asJvmBigInteger())
 
         val encoded = point.getEncoded(false)
-        return BigInteger(1, Arrays.copyOfRange(encoded, 1, encoded.size))
+        return BigInteger(1, Arrays.copyOfRange(encoded, 1, encoded.size)).asMppBigInteger()
     }
 
     /**
