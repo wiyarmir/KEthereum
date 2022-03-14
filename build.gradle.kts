@@ -9,7 +9,8 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
+        classpath(kotlin("gradle-plugin", version = Versions.kotlin))
+        classpath(kotlin("serialization", version = Versions.kotlin))
         classpath("com.github.ben-manes:gradle-versions-plugin:${Versions.versions_plugin}")
         classpath("com.github.komputing:kethabi:0.3.1")
         classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.17.1")

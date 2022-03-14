@@ -1,6 +1,5 @@
 package org.kethereum.wallet
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.kethereum.crypto.toECKeyPair
@@ -10,6 +9,7 @@ import org.kethereum.wallet.data.PASSWORD
 import org.komputing.khex.model.HexString
 import java.io.File
 import java.nio.file.Files
+import kotlin.test.assertEquals
 
 private fun loadFile(name: String) = File(WalletUtilsTest::class.java.getResource("/keyfiles/$name").file)
 
@@ -32,9 +32,9 @@ class WalletUtilsTest {
     fun testGenerateFullWalletFile() {
         val tested = KEY_PAIR.generateWalletFile(PASSWORD, tempDir, STANDARD_SCRYPT_CONFIG)
 
-        assertThat(tested.file.loadKeysFromWalletFile(PASSWORD)).isEqualTo(KEY_PAIR)
+        assertEquals(tested.file.loadKeysFromWalletFile(PASSWORD), KEY_PAIR)
 
-        assertThat(tested.wallet.decrypt(PASSWORD)).isEqualTo(KEY_PAIR)
+        assertEquals(tested.wallet.decrypt(PASSWORD), KEY_PAIR)
     }
 
     @Test
@@ -42,18 +42,17 @@ class WalletUtilsTest {
 
         val tested = KEY_PAIR.generateWalletFile(PASSWORD, tempDir, LIGHT_SCRYPT_CONFIG)
 
-        assertThat(tested.file.loadKeysFromWalletFile(PASSWORD)).isEqualTo(KEY_PAIR)
+        assertEquals(tested.file.loadKeysFromWalletFile(PASSWORD), KEY_PAIR)
 
-        assertThat(tested.wallet.decrypt(PASSWORD)).isEqualTo(KEY_PAIR)
+        assertEquals(tested.wallet.decrypt(PASSWORD), KEY_PAIR)
     }
-
 
     @Test
     fun testLoadCredentialsFromFile() {
         val file = loadFile("UTC--2016-11-03T05-55-06.340672473Z--ef678007d18427e6022059dbc264f27507cd1ffc")
         val keyPair = file.loadKeysFromWalletFile(PASSWORD)
 
-        assertThat(keyPair).isEqualTo(KEY_PAIR)
+        assertEquals(keyPair, KEY_PAIR)
     }
 
     @Test
@@ -62,7 +61,6 @@ class WalletUtilsTest {
         val keyPair = file.loadKeysFromWalletFile(PASSWORD)
 
         val privateKey = PrivateKey(HexString("6ca4203d715e693279d6cd9742ad2fb7a3f6f4abe27a64da92e0a70ae5d859c9"))
-        assertThat(keyPair).isEqualTo(privateKey.toECKeyPair())
+        assertEquals(keyPair, privateKey.toECKeyPair())
     }
-
 }

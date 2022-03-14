@@ -2,6 +2,8 @@ package org.kethereum.crypto
 
 import java.security.SecureRandom
 
+actual typealias SecureRandom = SecureRandom
+
 /**
  * Utility class for working with SecureRandom implementation.
  *
@@ -9,7 +11,7 @@ import java.security.SecureRandom
  * This is to address issues with SecureRandom on Android. For more information, refer to the
  * following [issue](https://github.com/web3j/web3j/issues/146).
  */
-object SecureRandomUtils {
+actual object SecureRandomUtils {
 
     private val SECURE_RANDOM: SecureRandom
 
@@ -28,5 +30,5 @@ object SecureRandomUtils {
         SECURE_RANDOM = SecureRandom()
     }
 
-    fun secureRandom() = SECURE_RANDOM
+    actual fun secureRandom(): SecureRandom = SECURE_RANDOM
 }

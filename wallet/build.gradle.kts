@@ -1,14 +1,47 @@
-dependencies {
-    "implementation"(project(":crypto"))
-    "implementation"(project(":crypto_api"))
-    "implementation"(project(":keccak_shortcut"))
-    "implementation"(project(":extensions_kotlin"))
-    "implementation"(project(":model"))
+plugins {
+    kotlin("multiplatform")
+    kotlin("plugin.serialization")
+}
 
-    "implementation"("com.github.komputing:khex:${Versions.khex}")
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {implementation(project(":crypto"))
+                implementation(project(":crypto_api"))
+                implementation(project(":keccak_shortcut"))
+                implementation(project(":extensions_kotlin"))
+                implementation(project(":model"))
 
-    "implementation"("com.squareup.moshi:moshi:${Versions.moshi}")
-    "implementation"("com.squareup.moshi:moshi-adapters:${Versions.moshi}")
+                implementation("com.github.komputing:khex:${Versions.khex}")
 
-    "testImplementation"(project(":crypto_impl_spongycastle"))
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+
+                implementation("com.ionspin.kotlin:bignum:${Versions.bignum}")
+                implementation("com.github.cy6erGn0m.kotlinx-uuid:kotlinx-uuid-core:0.1.0")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(project(":test_data"))
+                implementation(project(":crypto_impl_spongycastle"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+            }
+        }
+    }
 }
