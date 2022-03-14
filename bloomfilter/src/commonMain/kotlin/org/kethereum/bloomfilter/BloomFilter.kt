@@ -1,18 +1,19 @@
 package org.kethereum.bloomfilter
 
+import com.ionspin.kotlin.bignum.integer.BigInteger
+import com.ionspin.kotlin.bignum.integer.Sign
+import kotlinx.atomicfu.locks.reentrantLock
+import kotlinx.atomicfu.locks.withLock
 import org.komputing.khash.sha256.extensions.sha256
-import java.math.BigInteger
-import java.util.*
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.read
-import kotlin.concurrent.write
 
 class BloomFilter(private val size: Int) {
     private val bits = BitSet(size)
-    private val lock = ReentrantReadWriteLock()
+
+    // TODO performance of not being a write/read lock
+    private val lock = reentrantLock()
 
     fun add(value: ByteArray) {
-        lock.write {
+        lock.withLock {
             for (seed in 1..3) {
                 bits.set(hashing(size, seed, value))
             }
@@ -20,7 +21,7 @@ class BloomFilter(private val size: Int) {
     }
 
     fun mightContain(value: ByteArray): Boolean {
-        lock.read {
+        lock.withLock {
             for (seed in 1..3) {
                 if (!bits.get(hashing(size, seed, value))) {
                     return false
@@ -31,7 +32,7 @@ class BloomFilter(private val size: Int) {
     }
 
     private fun hashing(filterSize: Int, seed: Int, value: ByteArray) =
-            BigInteger(1, value.plus(seed.toByte()).sha256())
-                    .remainder(BigInteger.valueOf(filterSize.toLong()))
-                    .toInt()
+        BigInteger.fromByteArray(value.plus(seed.toByte()).sha256(), Sign.POSITIVE)
+            .remainder(BigInteger.fromLong(filterSize.toLong()))
+            .intValue()
 }

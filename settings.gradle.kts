@@ -12,7 +12,7 @@
 //include(":bip39_wordlist_zh-Hans")
 //include(":bip39_wordlist_zh-Hant")
 //include(":blockscout")
-//include(":bloomfilter")
+include(":bloomfilter")
 include(":crypto")
 include(":crypto_api")
 include(":crypto_impl_java_provider")

@@ -15,7 +15,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("com.github.komputing:khex:${Versions.khex}")
-                implementation("com.ionspin.kotlin:bignum:0.3.2")
+                implementation("com.ionspin.kotlin:bignum:${Versions.bignum}")
             }
         }
         val jvmTest by getting {

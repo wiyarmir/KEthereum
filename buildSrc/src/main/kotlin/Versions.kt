@@ -12,4 +12,5 @@ object Versions {
     const val threetenbp = "1.5.1"
     const val okio = "2.4.0"
     const val base58 = "0.4"
+    const val bignum = "0.3.2"
 }
