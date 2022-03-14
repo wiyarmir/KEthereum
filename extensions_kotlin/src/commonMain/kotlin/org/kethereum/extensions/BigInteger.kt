@@ -2,13 +2,14 @@ package org.kethereum.extensions
 
 import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.Sign
+import com.ionspin.kotlin.bignum.integer.util.toTwosComplementByteArray
 import org.komputing.khex.extensions.clean0xPrefix
 import org.komputing.khex.extensions.has0xPrefix
 import org.komputing.khex.model.HexString
 
 fun BigInteger.toBytesPadded(length: Int): ByteArray {
     val result = ByteArray(length)
-    val bytes = toByteArray()
+    val bytes = toTwosComplementByteArray()
 
     val offset = if (bytes[0].toInt() == 0) 1 else 0
 
